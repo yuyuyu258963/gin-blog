@@ -28,6 +28,13 @@ type Article struct {
 // 	return nil
 // }
 
+func CleanAllArticle() bool {
+	// Unscoped 表示硬删除
+	db.Unscoped().Where("deleted_on != ?", 0).Delete(&Article{})
+
+	return true
+}
+
 // 获取单个文章
 func GetArticle(id int) (article Article) {
 	db.Where("id = ?", id).Find(&article)

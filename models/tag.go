@@ -29,6 +29,13 @@ type Tag struct {
 // 	return nil
 // }
 
+func CleanAllTag() bool {
+	// Unscoped 表示硬删除
+	db.Unscoped().Where("deleted_on != ?", 0).Delete(&Tag{})
+
+	return true
+}
+
 // 获取所有标签列表
 func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
 	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
