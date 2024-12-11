@@ -1,0 +1,285 @@
+basePath: /api/v1
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /api/auth:
+    get:
+      consumes:
+      - application/json
+      description: Get Auth Token
+      parameters:
+      - description: Name
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: Password
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "20003":
+          description: ok
+          schema:
+            type: string
+      summary: Get Auth Token
+      tags:
+      - auth
+  /api/v1/article:
+    put:
+      consumes:
+      - application/json
+      description: 新增文章
+      parameters:
+      - description: TagId
+        in: query
+        name: tag_id
+        type: integer
+      - description: Title
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: Content
+        in: query
+        name: content
+        required: true
+        type: string
+      - description: CreatedBy
+        in: query
+        name: created_by
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "10002":
+          description: '{"code":10002,"data":{},"msg":"Tag不存在"}'
+          schema:
+            type: string
+      summary: 新增文章
+      tags:
+      - Article
+  /api/v1/article/{id}:
+    delete:
+      description: 删除文章
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+        "10003":
+          description: '{"code":10003,"data":{},"msg":"文章不存在"}'
+          schema:
+            type: string
+      summary: 删除文章
+      tags:
+      - Article
+    get:
+      consumes:
+      - application/json
+      description: Get aim articles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "10003":
+          description: '{"code":10003,"data":{},"msg":"文章不存在"}'
+          schema:
+            type: string
+      summary: GetArticles List
+      tags:
+      - Article
+    post:
+      consumes:
+      - application/json
+      description: 修改文章
+      parameters:
+      - description: TagId
+        in: query
+        name: tag_id
+        type: integer
+      - description: Title
+        in: query
+        name: title
+        type: string
+      - description: Content
+        in: query
+        name: content
+        type: string
+      - description: ModifiedBy
+        in: query
+        name: modified_by
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "10003":
+          description: '{"code":10003,"data":{},"msg":"文章不存在"}'
+          schema:
+            type: string
+      summary: 修改文章
+      tags:
+      - Article
+  /api/v1/articles:
+    get:
+      consumes:
+      - application/json
+      description: Get aim articles
+      parameters:
+      - description: State
+        in: body
+        name: state
+        schema:
+          type: integer
+      - description: TagId
+        in: body
+        name: tag_id
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: GetArticles List
+      tags:
+      - Article
+  /api/v1/tags:
+    get:
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 获取多个文章标签
+      tags:
+      - Tag
+    post:
+      parameters:
+      - description: Name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      - description: CreatedBy
+        in: query
+        name: created_by
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 新增文章标签
+      tags:
+      - Tag
+  /api/v1/tags/{id}:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 删除文章标签
+      tags:
+      - Tag
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ID
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: State
+        in: query
+        name: state
+        type: integer
+      - description: ModifiedBy
+        in: query
+        name: modified_by
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 修改文章标签
+      tags:
+      - Tag
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

@@ -2,8 +2,8 @@ package util
 
 import (
 	"errors"
+	log "gin_example/pkg/logging"
 	"gin_example/pkg/setting"
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -39,7 +39,7 @@ func GenerateToken(username, password string) (tokenString string, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	tokenString, err = token.SignedString(jwtSecret)
 	if err != nil {
-		log.Println("token 生成失败", tokenString, err)
+		log.Info("token 生成失败", tokenString, err)
 	}
 	return
 }

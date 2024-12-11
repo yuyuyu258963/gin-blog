@@ -1,7 +1,7 @@
 package setting
 
 import (
-	"log"
+	log "gin_example/pkg/logging"
 	"time"
 
 	"github.com/go-ini/ini"
@@ -22,9 +22,9 @@ var (
 
 func init() {
 	var err error
-	Cfg, err = ini.Load("../conf/app.ini")
+	Cfg, err = ini.Load("./conf/app.ini")
 	if err != nil {
-		log.Fatalf("Fail to parse [conf/app.ini]: %v ", err)
+		log.FatalF("Fail to parse [conf/app.ini]: %v ", err)
 	}
 
 	LoadBase()
@@ -43,7 +43,7 @@ func LoadBase() {
 func loadServer() {
 	sec, err := Cfg.GetSection("server")
 	if err != nil {
-		log.Fatalf("Fail to get section server: %v", err)
+		log.FatalF("Fail to get section server: %v", err)
 	}
 
 	HTTPPort = sec.Key("HTTP_PORT").MustInt(8000)
@@ -55,7 +55,7 @@ func loadServer() {
 func LoadApp() {
 	sec, err := Cfg.GetSection("app")
 	if err != nil {
-		log.Fatalf("Fail to get section app: %v", err)
+		log.FatalF("Fail to get section app: %v", err)
 	}
 
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)

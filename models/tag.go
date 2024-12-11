@@ -1,11 +1,5 @@
 package models
 
-import (
-	"time"
-
-	"github.com/jinzhu/gorm"
-)
-
 type Tag struct {
 	Model
 
@@ -15,23 +9,25 @@ type Tag struct {
 	State      int    `json:"state"`
 }
 
+// 通过嵌入的Model对应的回调函数实现了
+
 /*
 	这两个属于gorm的Callbacks，可以将回调方法定义为模型结构的指针，在创建、更新、查询、删除时
 	将被调用，如果任何回调返回错误，gorm将停止未来操作并回滚所有更改
 */
 
 // 新增两个Hook函数
-func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
+// func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
+// 	scope.SetColumn("CreatedOn", time.Now().Unix())
 
-	return nil
-}
+// 	return nil
+// }
 
-func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
+// func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
+// 	scope.SetColumn("ModifiedOn", time.Now().Unix())
 
-	return nil
-}
+// 	return nil
+// }
 
 // 获取所有标签列表
 func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {

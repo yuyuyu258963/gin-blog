@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"gin_example/pkg/e"
+	log "gin_example/pkg/logging"
 	"gin_example/pkg/util"
 	"net/http"
 	"time"
@@ -17,9 +18,12 @@ func JWT() gin.HandlerFunc {
 
 		code = e.SUCCESS
 		// tokenStr := c.Query("token")
-		token, _ := c.Request.Cookie(util.TOKEN_COOKIE_KEY)
+		token, err := c.Request.Cookie(util.TOKEN_COOKIE_KEY)
+		var tokenStr string = ""
+		if err == nil {
+			tokenStr = token.Value
+		}
 		// 对Cookie有效期进行验证
-		tokenStr := token.Value
 		if tokenStr == "" {
 			code = e.ERROR_NOTFOUND_TOKEN
 		} else {
@@ -34,6 +38,8 @@ func JWT() gin.HandlerFunc {
 
 		// 失败鉴权处理
 		if code != e.SUCCESS {
+			log.InfoF("refuse %s request with Token [%s], message:[%s]",
+				c.Request.RemoteAddr, tokenStr, e.GetMsg(code))
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": code,
 				"msg":  e.GetMsg(code),

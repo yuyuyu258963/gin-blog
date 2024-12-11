@@ -3,9 +3,9 @@ package v1
 import (
 	"gin_example/models"
 	"gin_example/pkg/e"
+	log "gin_example/pkg/logging"
 	"gin_example/pkg/setting"
 	"gin_example/pkg/util"
-	"log"
 	"net/http"
 	"strings"
 
@@ -17,6 +17,14 @@ import (
 // TODO 涉及幂等性校验的部分需要用事务实现
 
 // 获取单个文章
+// @Summary GetArticles List
+// @Description Get aim articles
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 10003 {string} json "{"code":10003,"data":{},"msg":"文章不存在"}"
+// @Router /api/v1/article/{id} [get]
 func GetArticle(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
@@ -34,7 +42,7 @@ func GetArticle(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+			log.InfoF("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
 
@@ -47,6 +55,15 @@ func GetArticle(c *gin.Context) {
 
 // 获取多个文章
 // 支持根据state 或 tag 查询
+// @Summary GetArticles List
+// @Description Get aim articles
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Param state body int false "State"
+// @Param tag_id body int false "TagId"
+// @Success 200 {string} string "ok"
+// @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
 	data := make(map[string]interface{})
 	maps := make(map[string]interface{}) // 用于组织查询条件
@@ -76,7 +93,7 @@ func GetArticles(c *gin.Context) {
 		data["total"] = models.GetArticleTotal(maps)
 	} else {
 		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+			log.InfoF("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
 
@@ -88,6 +105,19 @@ func GetArticles(c *gin.Context) {
 }
 
 // 新增文章
+// @Summary 新增文章
+// @Description 新增文章
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Param tag_id query int false "TagId"
+// @Param title query string true "Title"
+// @Param content query string true "Content"
+// @Param created_by query string true "CreatedBy"
+// @Param state query int false "State"
+// @Success 200 {string} string "ok"
+// @Failure 10002 {string} json "{"code":10002,"data":{},"msg":"Tag不存在"}"
+// @Router /api/v1/article [put]
 func AddArticle(c *gin.Context) {
 	tagId := com.StrTo(c.Query("tag_id")).MustInt()
 	title := c.Query("title")
@@ -123,7 +153,7 @@ func AddArticle(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+			log.InfoF("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
 
@@ -135,6 +165,19 @@ func AddArticle(c *gin.Context) {
 }
 
 // 修改文章
+// @Summary 修改文章
+// @Description 修改文章
+// @Tags Article
+// @Accept json
+// @Produce json
+// @Param tag_id query int false "TagId"
+// @Param title query string false "Title"
+// @Param content query string false "Content"
+// @Param modified_by query string true "ModifiedBy"
+// @Param state query int false "State"
+// @Success 200 {string} string "ok"
+// @Failure 10003 {string} json "{"code":10003,"data":{},"msg":"文章不存在"}"
+// @Router /api/v1/article/{id} [post]
 func EditArticle(c *gin.Context) {
 	valid := validation.Validation{}
 	id := com.StrTo(c.Param("id")).MustInt()
@@ -183,7 +226,7 @@ func EditArticle(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+			log.InfoF("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
 
@@ -195,6 +238,13 @@ func EditArticle(c *gin.Context) {
 }
 
 // 删除文章
+// @Summary 删除文章
+// @Description 删除文章
+// @Tags Article
+// @Produce  json
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Failure 10003 {string} json "{"code":10003,"data":{},"msg":"文章不存在"}"
+// @Router /api/v1/article/{id} [Delete]
 func DeleteArticle(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	valid := validation.Validation{}
@@ -211,7 +261,7 @@ func DeleteArticle(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
+			log.InfoF("err.key: %s, err.message: %s", err.Key, err.Message)
 		}
 	}
 

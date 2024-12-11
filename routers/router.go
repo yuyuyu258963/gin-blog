@@ -5,22 +5,29 @@ import (
 	"gin_example/pkg/setting"
 	v1 "gin_example/routers/api/v1"
 
+	_ "gin_example/docs"
+
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // 创建一个新的gin.Engine的实例
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	// 使用两个默认的中间件
-	r.Use(gin.Logger())
+	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 
 	gin.SetMode(setting.RunMode)
 
+	// url := ginSwagger.URL("/swagger/doc.json") // 指定 swagger json 的路径
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	r.GET("/api/auth", v1.GetAuth)
 
 	apiv1 := r.Group("/api/v1")
-	apiv1.Use(middleware.JWT())
+	apiv1.Use(middleware.JWT()) // 使用中间件
 	{
 		// =====  TAG ====
 		tagApi(apiv1)
