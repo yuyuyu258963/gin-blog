@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"gin_example/models"
 	"gin_example/pkg/app"
 	"gin_example/pkg/e"
 	"gin_example/pkg/export"
@@ -40,10 +39,17 @@ func GetTags(c *gin.Context) {
 		maps["state"] = state
 	}
 
+	tagS := tagService.Tag{
+		Name:     name,
+		State:    state,
+		PageNum:  util.GetPage(c),
+		PageSize: setting.AppSetting.PageSize,
+	}
+
 	code := e.SUCCESS
 	// util.GetPage 保证了各接口处理page的逻辑是一致的
-	data["list"], _ = models.GetTags(util.GetPage(c), setting.AppSetting.PageSize, maps)
-	data["total"], _ = models.GetTagTotal(maps)
+	data["list"], _ = tagS.GetAll()
+	data["total"], _ = tagS.Count()
 
 	appG.Response(http.StatusOK, code, data)
 }
@@ -78,7 +84,8 @@ func AddTag(c *gin.Context) {
 		appG.Response(http.StatusOK, code, make(map[string]interface{}))
 		return
 	}
-	exists, err := models.ExistTagByName(name)
+	tagS := tagService.Tag{Name: name, State: state, CreatedBy: createdBy}
+	exists, err := tagS.ExistTagByName()
 	if err != nil {
 		code = e.ERROR_CHECK_TAG_EXISTS
 		goto reply
@@ -88,7 +95,7 @@ func AddTag(c *gin.Context) {
 		goto reply
 	}
 	code = e.SUCCESS
-	models.AddTag(name, state, createdBy)
+	tagS.AddTag()
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))
@@ -128,9 +135,8 @@ func EditTag(c *gin.Context) {
 		return
 	}
 
-	data := make(map[string]interface{})
-	tagService := tagService.Tag{ID: id}
-	exists, err := tagService.ExistTagByID()
+	tagS := tagService.Tag{ID: id, Name: name, State: state}
+	exists, err := tagS.ExistTagByID()
 	if err != nil {
 		code = e.ERROR_CHECK_TAG_EXISTS
 		goto reply
@@ -141,15 +147,10 @@ func EditTag(c *gin.Context) {
 	}
 
 	code = e.SUCCESS
-	data["modified_by"] = modifiedBy
-	if name != "" {
-		data["name"] = name
+	_, err = tagS.Edit()
+	if err != nil {
+		code = e.ERROR_EDIT_TAG
 	}
-	if state != -1 {
-		data["state"] = state
-	}
-
-	models.EditTag(id, data)
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))
@@ -162,7 +163,7 @@ reply:
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [Delete]
 func DeleteTag(c *gin.Context) {
-	appG := app.Gin{c}
+	appG := app.Gin{C: c}
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
@@ -173,8 +174,8 @@ func DeleteTag(c *gin.Context) {
 		app.MarkErrors(valid.Errors)
 		appG.Response(http.StatusOK, code, make(map[string]interface{}))
 	}
-	tagService := tagService.Tag{ID: id}
-	exists, err := tagService.ExistTagByID()
+	tagS := tagService.Tag{ID: id}
+	exists, err := tagS.ExistTagByID()
 	if err != nil {
 		code = e.ERROR_CHECK_TAG_EXISTS
 		goto reply
@@ -185,7 +186,7 @@ func DeleteTag(c *gin.Context) {
 	}
 
 	code = e.SUCCESS
-	models.DeleteTag(id)
+	tagS.DeleteTag()
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))

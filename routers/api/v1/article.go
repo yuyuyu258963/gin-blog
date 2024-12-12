@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"gin_example/models"
 	"gin_example/pkg/app"
 	"gin_example/pkg/e"
 	"gin_example/pkg/setting"
@@ -103,6 +102,13 @@ func GetArticles(c *gin.Context) {
 		valid.Min(tagId, 1, "tag_id").Message("标签ID必须大于0")
 	}
 
+	articleS := articleService.Article{
+		TagID: tagId,
+		State: state,
+
+		PageNum:  util.GetPage(c),
+		PageSize: setting.AppSetting.PageSize,
+	}
 	code := e.INVALID_PARAMS
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
@@ -111,8 +117,8 @@ func GetArticles(c *gin.Context) {
 
 	code = e.SUCCESS
 
-	data["lists"] = models.GetArticles(util.GetPage(c), setting.AppSetting.PageSize, maps)
-	data["total"] = models.GetArticleTotal(maps)
+	data["lists"], _ = articleS.GetAll()
+	data["total"], _ = articleS.Count()
 
 reply:
 	appG.Response(http.StatusOK, code, data)
@@ -154,16 +160,24 @@ func AddArticle(c *gin.Context) {
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 	valid.MaxSize(coverImageUrl, 255, "cover_image_url").Message("文件路径最长为255字符")
 
-	data := make(map[string]interface{})
 	code := e.INVALID_PARAMS
 	// 参数校验失败
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusOK, code, data)
+		appG.Response(http.StatusOK, code, make(map[string]interface{}))
 		return
 	}
 	// TODO 这里没有ID了是不是就查不了了，只能去查Tag是不是存在
 	tagService := tagService.Tag{ID: tagId}
+	articleS := articleService.Article{
+		TagID:         tagId,
+		Title:         title,
+		Desc:          desc,
+		Content:       content,
+		CreatedBy:     createdBy,
+		State:         state,
+		CoverImageUrl: coverImageUrl,
+	}
 	exist, err := tagService.ExistTagByID()
 	if err != nil {
 		code = e.ERROR_CHECK_TAG_EXISTS
@@ -174,15 +188,11 @@ func AddArticle(c *gin.Context) {
 		goto reply
 	}
 
-	data["tag_id"] = tagId
-	data["title"] = title
-	data["desc"] = desc
-	data["content"] = content
-	data["created_by"] = createdBy
-	data["state"] = state
-	data["cover_image_url"] = coverImageUrl
-	models.AddArticle(data)
 	code = e.SUCCESS
+	_, err = articleS.Add()
+	if err != nil {
+		code = e.ERROR_ADD_ARTICLE
+	}
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))
@@ -234,7 +244,6 @@ func EditArticle(c *gin.Context) {
 	var exists bool
 	var err error
 	var articleS articleService.Article
-	data := make(map[string]interface{})
 
 	// 参数校验不通过
 	if valid.HasErrors() {
@@ -242,7 +251,15 @@ func EditArticle(c *gin.Context) {
 		goto reply
 	}
 
-	articleS = articleService.Article{ID: id}
+	articleS = articleService.Article{
+		ID:            id,
+		TagID:         tagId,
+		Title:         title,
+		Content:       content,
+		Desc:          desc,
+		CoverImageUrl: coverImageUrl,
+		ModifiedBy:    modifiedBy,
+	}
 	exists, err = articleS.ExistArticleByID()
 
 	if err != nil {
@@ -254,25 +271,11 @@ func EditArticle(c *gin.Context) {
 		goto reply
 	}
 
-	if tagId > 0 {
-		data["tag_id"] = tagId
-	}
-	if title != "" {
-		data["title"] = title
-	}
-	if desc != "" {
-		data["desc"] = desc
-	}
-	if content != "" {
-		data["content"] = content
-	}
-	if coverImageUrl != "" {
-		data["cover_image_url"] = coverImageUrl
-	}
-	data["modified_by"] = modifiedBy
-
-	models.EditArticle(id, data)
 	code = e.SUCCESS
+	_, err = articleS.Edit()
+	if err != nil {
+		code = e.ERROR_EDIT_ARTICLE
+	}
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))
@@ -312,7 +315,7 @@ func DeleteArticle(c *gin.Context) {
 		goto reply
 	}
 
-	models.DeleteArticle(id)
+	articleS.Delete()
 	code = e.SUCCESS
 
 reply:

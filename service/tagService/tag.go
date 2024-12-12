@@ -9,7 +9,6 @@ import (
 	"gin_example/pkg/logging"
 	"gin_example/service/cache_service"
 	"io"
-	"log"
 	"path"
 	"strconv"
 	"time"
@@ -39,12 +38,43 @@ func (t *Tag) ExistTagByID() (bool, error) {
 	return models.ExistTagByID(t.ID)
 }
 
+// 删除对应ID的Tag
+func (t *Tag) DeleteTag() (bool, error) {
+	return models.DeleteTag(t.ID)
+}
+
+// 获取所有符合条件的Tag
+func (t *Tag) GetTagTotal(mps map[string]interface{}) (int, error) {
+	return models.GetTagTotal(mps)
+}
+
+// 新增标签
+func (t *Tag) AddTag() bool {
+	return models.AddTag(t.Name, t.State, t.CreatedBy)
+}
+
+// 修改标签
+func (t *Tag) Edit() (bool, error) {
+	data := make(map[string]interface{})
+	data["modified_by"] = t.ModifiedBy
+	if t.Name != "" {
+		data["name"] = t.Name
+	}
+	if t.State != -1 {
+		data["state"] = t.State
+	}
+	return models.EditTag(t.ID, data)
+}
+
 func (t *Tag) GetAll() ([]models.Tag, error) {
 	var (
 		tags, cacheTags []models.Tag
 	)
+	// 需要和cache_service中的GetTagsKey要使用的字段对应
 	cache := cache_service.Tag{
-		State:    t.State,
+		State: t.State,
+		Name:  t.Name,
+
 		PageNum:  t.PageNum,
 		PageSize: t.PageSize,
 	}
@@ -59,14 +89,17 @@ func (t *Tag) GetAll() ([]models.Tag, error) {
 		}
 	}
 
-	log.Println(t.PageNum, t.PageSize, t.getMaps())
-	tags, err := models.GetTags(t.PageNum, t.PageSize, t.getMaps())
+	tags, err := models.GetTags(t.PageNum, t.GetPageSize(), t.getMaps())
 	if err != nil {
 		return nil, err
 	}
 
 	gredis.Set(key, tags, 3600)
 	return tags, nil
+}
+
+func (t *Tag) Count() (int, error) {
+	return models.GetArticleTotal(t.getMaps())
 }
 
 // 根据Tag中设定的条件将Tag导出
@@ -143,6 +176,7 @@ func (t *Tag) Import(r io.Reader) error {
 func (t *Tag) getMaps() map[string]interface{} {
 	maps := make(map[string]interface{})
 	maps["deleted_on"] = 0
+
 	if t.Name != "" {
 		maps["name"] = t.Name
 	}
@@ -150,4 +184,8 @@ func (t *Tag) getMaps() map[string]interface{} {
 		maps["state"] = t.State
 	}
 	return maps
+}
+
+func (t *Tag) GetPageSize() int {
+	return max(1, t.PageSize)
 }

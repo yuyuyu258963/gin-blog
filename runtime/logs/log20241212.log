@@ -202,3 +202,110 @@
 [INFO][main.go:75]2024/12/12 20:09:09 Shutdown Server ...
 [INFO][main.go:63]2024/12/12 20:09:09 Failed Listen: http: Server closed 
 [INFO][main.go:128]2024/12/12 20:09:09 Server exiting
+[INFO][redis.go:41]2024/12/12 21:11:43 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:11:43 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:11:50 {"ClientIP":"::1","latencyTime":15417436,"reqMethod":"GET","reqUri":"/api/auth?username=test\u0026password=test123456","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:13:15 {"ClientIP":"::1","latencyTime":14372955,"reqMethod":"GET","reqUri":"/api/v1/tags?=","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:13:28 {"ClientIP":"::1","latencyTime":6931146,"reqMethod":"GET","reqUri":"/api/v1/tags?name=2","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:14:14 {"ClientIP":"::1","latencyTime":11861042,"reqMethod":"GET","reqUri":"/api/v1/tags?name=2","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:14:33 {"ClientIP":"::1","latencyTime":17252131,"reqMethod":"GET","reqUri":"/api/v1/tags?=","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:16:27 {"ClientIP":"::1","latencyTime":14996458,"reqMethod":"GET","reqUri":"/api/v1/articles","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:17:37 {"ClientIP":"::1","latencyTime":22062028,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:21:28 {"ClientIP":"::1","latencyTime":38454927,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:23:20 {"ClientIP":"::1","latencyTime":5560166,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:30:10 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:30:10 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:30:10 Server exiting
+[INFO][redis.go:41]2024/12/12 21:30:12 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:30:12 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:30:15 {"ClientIP":"::1","latencyTime":4050933,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:31:32 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:31:32 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:31:32 Server exiting
+[INFO][redis.go:41]2024/12/12 21:32:12 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:32:12 starting server at port: 8000 ...
+[WARN][article.go:102]2024/12/12 21:32:23 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:32:23 {"ClientIP":"::1","latencyTime":16531498,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:33:51 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:33:51 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:33:51 Server exiting
+[INFO][redis.go:41]2024/12/12 21:33:52 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:33:52 starting server at port: 8000 ...
+[WARN][article.go:104]2024/12/12 21:33:55 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:33:55 {"ClientIP":"::1","latencyTime":18916836,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:34:06 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:34:06 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:34:06 Server exiting
+[INFO][redis.go:41]2024/12/12 21:34:35 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:34:35 starting server at port: 8000 ...
+[WARN][article.go:104]2024/12/12 21:34:38 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:34:38 {"ClientIP":"::1","latencyTime":21896924,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:39:39 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:39:39 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:39:39 Server exiting
+[INFO][redis.go:41]2024/12/12 21:39:41 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:39:41 starting server at port: 8000 ...
+[WARN][article.go:109]2024/12/12 21:39:43 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:39:43 {"ClientIP":"::1","latencyTime":25185041,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:41:55 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:41:55 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:41:55 Server exiting
+[INFO][redis.go:41]2024/12/12 21:41:57 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:41:57 starting server at port: 8000 ...
+[WARN][article.go:109]2024/12/12 21:41:59 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:41:59 {"ClientIP":"::1","latencyTime":52164478,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:43:06 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:43:06 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:43:06 Server exiting
+[INFO][redis.go:41]2024/12/12 21:43:08 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:43:08 starting server at port: 8000 ...
+[WARN][article.go:109]2024/12/12 21:43:10 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:43:10 {"ClientIP":"::1","latencyTime":24186403,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:44:52 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:44:52 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:44:52 Server exiting
+[INFO][redis.go:41]2024/12/12 21:44:54 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:44:54 starting server at port: 8000 ...
+[WARN][article.go:109]2024/12/12 21:44:56 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:44:56 {"ClientIP":"::1","latencyTime":43582607,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:46:37 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:46:37 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:46:37 Server exiting
+[INFO][redis.go:41]2024/12/12 21:46:39 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:46:39 starting server at port: 8000 ...
+[WARN][article.go:109]2024/12/12 21:46:41 GetArticles failed err : Error 1054 (42S22): Unknown column 'blog_article.tag_id' in 'where clause'
+[INFO][log.go:28]2024/12/12 21:46:41 {"ClientIP":"::1","latencyTime":25405968,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:47:00 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:47:00 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:47:00 Server exiting
+[INFO][redis.go:41]2024/12/12 21:47:01 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:47:01 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:47:04 {"ClientIP":"::1","latencyTime":20457505,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:48:39 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:48:39 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:48:39 Server exiting
+[INFO][redis.go:41]2024/12/12 21:48:41 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:48:41 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:48:43 {"ClientIP":"::1","latencyTime":10154402,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:52:09 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:52:09 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:52:09 Server exiting
+[INFO][redis.go:41]2024/12/12 21:58:06 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:58:06 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:58:09 {"ClientIP":"::1","latencyTime":9237016,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][log.go:28]2024/12/12 21:58:27 {"ClientIP":"::1","latencyTime":10869495,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 21:59:24 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 21:59:24 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 21:59:24 Server exiting
+[INFO][redis.go:41]2024/12/12 21:59:26 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 21:59:26 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 21:59:28 {"ClientIP":"::1","latencyTime":4322411,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 22:01:12 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 22:01:12 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 22:01:12 Server exiting
+[INFO][redis.go:41]2024/12/12 22:04:29 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 22:04:29 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 22:04:36 {"ClientIP":"::1","latencyTime":21827751,"reqMethod":"GET","reqUri":"/api/v1/articles?tag_id=3","statusCode":200}
+[INFO][main.go:75]2024/12/12 22:04:46 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 22:04:46 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 22:04:46 Server exiting
