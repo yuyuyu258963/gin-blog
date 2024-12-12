@@ -2,9 +2,13 @@ package v1
 
 import (
 	"gin_example/models"
+	"gin_example/pkg/app"
 	"gin_example/pkg/e"
+	"gin_example/pkg/export"
+	"gin_example/pkg/logging"
 	"gin_example/pkg/setting"
 	"gin_example/pkg/util"
+	"gin_example/service/tagService"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
@@ -21,6 +25,7 @@ import (
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags [Get]
 func GetTags(c *gin.Context) {
+	appG := app.Gin{C: c}
 	name := c.Query("name")
 	maps := make(map[string]interface{})
 	data := make(map[string]interface{})
@@ -37,14 +42,10 @@ func GetTags(c *gin.Context) {
 
 	code := e.SUCCESS
 	// util.GetPage 保证了各接口处理page的逻辑是一致的
-	data["list"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
-	data["total"] = models.GetTagTotal(maps)
+	data["list"], _ = models.GetTags(util.GetPage(c), setting.AppSetting.PageSize, maps)
+	data["total"], _ = models.GetTagTotal(maps)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
+	appG.Response(http.StatusOK, code, data)
 }
 
 // TODO 涉及幂等性校验的部分需要用事务实现
@@ -58,6 +59,7 @@ func GetTags(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
+	appG := app.Gin{C: c}
 	name := c.Query("name")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
 	createdBy := c.Query("created_by")
@@ -71,20 +73,25 @@ func AddTag(c *gin.Context) {
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 
 	code := e.INVALID_PARAMS
-	if !valid.HasErrors() {
-		if !models.ExistTagByName(name) {
-			code = e.SUCCESS
-			models.AddTag(name, state, createdBy)
-		} else {
-			code = e.ERROR_EXIST_TAG
-		}
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, code, make(map[string]interface{}))
+		return
 	}
+	exists, err := models.ExistTagByName(name)
+	if err != nil {
+		code = e.ERROR_CHECK_TAG_EXISTS
+		goto reply
+	}
+	if !exists {
+		code = e.ERROR_EXIST_TAG
+		goto reply
+	}
+	code = e.SUCCESS
+	models.AddTag(name, state, createdBy)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+reply:
+	appG.Response(http.StatusOK, code, make(map[string]interface{}))
 }
 
 // @Summary 修改文章标签
@@ -97,6 +104,7 @@ func AddTag(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
+	appG := app.Gin{C: c}
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.Query("name")
 	modifiedBy := c.Query("modified_by")
@@ -114,29 +122,37 @@ func EditTag(c *gin.Context) {
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 
 	code := e.INVALID_PARAMS
-	if !valid.HasErrors() {
-		code = e.SUCCESS
-		if models.ExistTagByID(id) {
-			data := make(map[string]interface{})
-			data["modified_by"] = modifiedBy
-			if name != "" {
-				data["name"] = name
-			}
-			if state != -1 {
-				data["state"] = state
-			}
-
-			models.EditTag(id, data)
-		} else {
-			code = e.ERROR_NOT_EXITS_TAG
-		}
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, code, make(map[string]interface{}))
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]interface{}),
-	})
+	data := make(map[string]interface{})
+	tagService := tagService.Tag{ID: id}
+	exists, err := tagService.ExistTagByID()
+	if err != nil {
+		code = e.ERROR_CHECK_TAG_EXISTS
+		goto reply
+	}
+	if !exists {
+		code = e.ERROR_NOT_EXITS_TAG
+		goto reply
+	}
+
+	code = e.SUCCESS
+	data["modified_by"] = modifiedBy
+	if name != "" {
+		data["name"] = name
+	}
+	if state != -1 {
+		data["state"] = state
+	}
+
+	models.EditTag(id, data)
+
+reply:
+	appG.Response(http.StatusOK, code, make(map[string]interface{}))
 }
 
 // 删除文章标签
@@ -146,24 +162,93 @@ func EditTag(c *gin.Context) {
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
 // @Router /api/v1/tags/{id} [Delete]
 func DeleteTag(c *gin.Context) {
+	appG := app.Gin{c}
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID必须大于0")
 
 	code := e.INVALID_PARAMS
-	if !valid.HasErrors() {
-		code = e.SUCCESS
-		if models.ExistTagByID(id) {
-			models.DeleteTag(id)
-		} else {
-			code = e.ERROR_NOT_EXITS_TAG
-		}
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, code, make(map[string]interface{}))
+	}
+	tagService := tagService.Tag{ID: id}
+	exists, err := tagService.ExistTagByID()
+	if err != nil {
+		code = e.ERROR_CHECK_TAG_EXISTS
+		goto reply
+	}
+	if !exists {
+		code = e.ERROR_NOT_EXITS_TAG
+		goto reply
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]interface{}),
+	code = e.SUCCESS
+	models.DeleteTag(id)
+
+reply:
+	appG.Response(http.StatusOK, code, make(map[string]interface{}))
+}
+
+// 导出标签
+// @Summary 导出标签
+// @Tags Tag
+// @Produce  json
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Router /tags/export [post]
+func ExportTag(c *gin.Context) {
+	appG := app.Gin{C: c}
+
+	name := c.PostForm("name")
+	state := -1
+	if arg := c.PostForm("state"); arg != "" {
+		state = com.StrTo(arg).MustInt()
+	}
+
+	tagService := &tagService.Tag{
+		Name:  name,
+		State: state,
+		// PageNum:  setting.PageSize,
+		PageSize: setting.AppSetting.PageSize,
+	}
+
+	filename, err := tagService.Export()
+	if err != nil {
+		logging.InfoFiled(logging.LogFields{"error": err})
+		appG.Response(http.StatusOK, e.ERROR_EXPORT_TAG_FAIL, err)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"export_url":      export.GetExcelFullUrl(filename),
+		"export_save_url": export.GetExcelFullPath() + filename,
 	})
+}
+
+// 导入标签
+// @Summary 导入标签
+// @Tags Tag
+// @Produce  json
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Router /tags/import [post]
+func ImportTag(c *gin.Context) {
+	appG := app.Gin{C: c}
+
+	formFile, _, err := c.Request.FormFile("file")
+	if err != nil {
+		logging.Warn(err)
+		appG.Response(http.StatusOK, e.ERROR, nil)
+		return
+	}
+
+	tagS := tagService.Tag{}
+	err = tagS.Import(formFile)
+	if err != nil {
+		logging.Warn(err)
+		appG.Response(http.StatusOK, e.ERROR_IMPORT_TAG_FAIL, nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }

@@ -33,9 +33,14 @@ const (
 )
 
 // 启动前先生成日志的处理逻辑
-func init() {
-	filePath := getLogFileFullPath()
-	F = openLogFile(filePath)
+// - 日志文件创建和日志文件设置为写入
+func Setup() {
+	filePath := getLogFilePath()
+	fileName := getLogFileName()
+	F, err := openLogFile(fileName, filePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// 创建一个日志打印器
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)

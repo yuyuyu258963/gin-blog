@@ -20,6 +20,11 @@ buildDockerImage:
 	@echo "===== create docker image named gin-blog-docker ====="
 	@docker build -t gin-blog-docker .
 
+run: swagInit
+	@echo "===== Static linked executable file ====="
+	@CGO_ENABLED=0 GOOS=linux go build -v -o main ./cmd/main.go
+	@./main
+
 buildProject: swagInit
 # 直接将生成的可执行文件静态链接到所依赖的库
 	@echo "===== Static linked executable file ====="
@@ -38,3 +43,7 @@ runDocker: buildProject buildDockerImage
 clean:
 	@docker rm -f gin-example-app
 	@docker rmi gin-blog-docker
+
+help:
+	@echo "make run: run server on local"
+	@echo "make runDocker: run server on docker container"

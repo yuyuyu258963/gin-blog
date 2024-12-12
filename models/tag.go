@@ -1,5 +1,7 @@
 package models
 
+import "gin_example/pkg/logging"
+
 type Tag struct {
 	Model
 
@@ -37,33 +39,36 @@ func CleanAllTag() bool {
 }
 
 // 获取所有标签列表
-func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
-	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
-
+func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag, err error) {
+	err = db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error
 	return
 }
 
 // 获取标签数
-func GetTagTotal(maps interface{}) (count int) {
-	db.Model(&Tag{}).Where(maps).Count(&count)
-
+func GetTagTotal(maps interface{}) (count int, err error) {
+	err = db.Model(&Tag{}).Where(maps).Count(&count).Error
 	return
 }
 
 // 通过tag名称检查该tag是否存在
-func ExistTagByName(name string) bool {
+func ExistTagByName(name string) (bool, error) {
 	var tag Tag
-	db.Select("id").Where("name = ?", name).First(&tag)
-
-	return tag.ID > 0
+	err := db.Select("id").Where("name = ?", name).First(&tag).Error
+	if err != nil {
+		return false, err
+	}
+	return tag.ID > 0, nil
 }
 
 // 通过TagID检测该tag是否存在
-func ExistTagByID(id int) bool {
+func ExistTagByID(id int) (bool, error) {
 	var tag Tag
-	db.Select("id").Where("id = ?", id).First(&tag)
-
-	return tag.ID > 0
+	err := db.Select("id").Where("id = ?", id).First(&tag).Error
+	if err != nil {
+		logging.InfoF("failed run ExistTagByID %d", id)
+		return false, err
+	}
+	return tag.ID > 0, nil
 }
 
 // 新增Tag
@@ -78,15 +83,19 @@ func AddTag(name string, state int, createdBy string) bool {
 }
 
 // 修改标签
-func EditTag(id int, data map[string]interface{}) bool {
-	db.Model(&Tag{}).Where("id = ?", id).Updates(data)
-
-	return true
+func EditTag(id int, data map[string]interface{}) (bool, error) {
+	err := db.Model(&Tag{}).Where("id = ?", id).Updates(data).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 // 删除一个标签
-func DeleteTag(id int) bool {
-	db.Where("id = ?", id).Delete(&Tag{})
-
-	return true
+func DeleteTag(id int) (bool, error) {
+	err := db.Where("id = ?", id).Delete(&Tag{}).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

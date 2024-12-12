@@ -2,8 +2,12 @@ package routers
 
 import (
 	"gin_example/middleware"
+	"gin_example/pkg/export"
 	"gin_example/pkg/setting"
+	"gin_example/pkg/upload"
+	api "gin_example/routers/api"
 	v1 "gin_example/routers/api/v1"
+	"net/http"
 
 	_ "gin_example/docs"
 
@@ -19,12 +23,18 @@ func InitRouter() *gin.Engine {
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
 
-	gin.SetMode(setting.RunMode)
+	gin.SetMode(setting.ServerSetting.RunMode)
+
+	// 文件服务器的开启，即可以让用户访问本地的文件
+	r.StaticFS("/"+setting.AppSetting.ImageSavePath,
+		http.Dir(upload.GetImageFullPath()))
+	r.StaticFS("/"+setting.AppSetting.ExportSavePath,
+		http.Dir(export.GetExcelFullPath()))
 
 	// url := ginSwagger.URL("/swagger/doc.json") // 指定 swagger json 的路径
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	r.GET("/api/auth", v1.GetAuth)
+	r.GET("/api/auth", api.GetAuth)
+	r.GET("/api/upload", api.UploadImage) // 文件上传接口
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middleware.JWT()) // 使用中间件
@@ -48,6 +58,10 @@ func tagApi(r *gin.RouterGroup) {
 	r.PUT("/tags/:id", v1.EditTag)
 	// 删除指定标签
 	r.DELETE("/tags/:id", v1.DeleteTag)
+	// 导出标签
+	r.POST("/tags/export", v1.ExportTag)
+	// 导入标签
+	r.POST("/tags/import", v1.ImportTag)
 }
 
 // 注册article相关的处理接口

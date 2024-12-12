@@ -21,40 +21,29 @@ type Model struct {
 	DeletedOn  int `json:"deleted_on"`
 }
 
-func init() {
-	var (
-		err                                               error
-		dbType, dbName, user, password, host, tablePrefix string
+// 初始化数据库连接
+func Setup() {
+	var err error
+
+	DatabaseSetting := setting.DatabaseSetting
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		DatabaseSetting.User,
+		DatabaseSetting.Password,
+		DatabaseSetting.Host,
+		DatabaseSetting.DBName,
 	)
-
-	sec, err := setting.Cfg.GetSection("database")
-	if err != nil {
-		log.Fatal(2, "Fail to get section database: %v", err)
-	}
-
-	dbType = sec.Key("TYPE").MustString("mysql")
-	dbName = sec.Key("NAME").MustString("NAME")
-	user = sec.Key("USER").String()
-	password = sec.Key("PASSWORD").String()
-	host = sec.Key("HOST").String()
-	tablePrefix = sec.Key("TABLE_PREFIX").String()
-
 	// 打开与数据库的连接
-	db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		user,
-		password,
-		host,
-		dbName,
-	))
+	db, err = gorm.Open(DatabaseSetting.Type, dsn)
 
 	if err != nil {
 		log.Println(err)
 	}
-	log.Printf("success open database %s/%s", host, dbName)
+	log.Printf("Success Open database: %s", dsn)
 
 	// 设置默认表名前缀
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return tablePrefix + defaultTableName
+		return DatabaseSetting.TablePrefix + defaultTableName
 	}
 
 	db.SingularTable(true)

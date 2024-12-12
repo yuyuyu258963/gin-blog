@@ -9,10 +9,22 @@ import (
 	"syscall"
 	"time"
 
+	"gin_example/models"
+	"gin_example/pkg/gredis"
 	log "gin_example/pkg/logging"
 	"gin_example/pkg/setting"
 	"gin_example/routers"
 )
+
+func init() {
+	// 1. 抽离出来统一加载的好处就是可以控制加载的流程
+	// 比如必须先让setting配置了，然后再进行别的操作
+	// 2. 增加可读性和可见性，不然还得去找那些出现了问题
+	setting.Setup()
+	log.Setup()
+	models.Setup()
+	gredis.Setup()
+}
 
 // endless 热更新采用创建子进程后，将原进程退出的方式
 // @title           Swagger Example API
@@ -36,19 +48,19 @@ import (
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	router := routers.InitRouter()
-
+	ServerSetting := setting.ServerSetting
 	s := &http.Server{
-		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
+		Addr:           fmt.Sprintf("0.0.0.0:%d", ServerSetting.HTTPPort),
 		Handler:        router,
-		ReadTimeout:    setting.ReadTimeout,
-		WriteTimeout:   setting.WriteTimeout,
+		ReadTimeout:    ServerSetting.ReadTimeout,
+		WriteTimeout:   ServerSetting.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
 
 	go func() {
-		log.InfoF("starting server at port: %d ...", setting.HTTPPort)
+		log.InfoF("starting server at port: %d ...", ServerSetting.HTTPPort)
 		if err := s.ListenAndServe(); err != nil {
-			log.InfoF("Listen: %v \n", err)
+			log.InfoF("Failed Listen: %v \n", err)
 		}
 	}()
 
@@ -69,7 +81,6 @@ func main() {
 			log.ErrorF("Failed to start new process: %v", err)
 		}
 	}
-
 }
 
 // startNewProcess 启动新进程

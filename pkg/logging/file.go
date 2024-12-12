@@ -2,55 +2,55 @@ package logging
 
 import (
 	"fmt"
-	"log"
+	"gin_example/pkg/file"
+	"gin_example/pkg/setting"
 	"os"
+	"path"
 	"time"
-)
-
-var (
-	LogSavePath = "./runtime/logs/"
-	LogSaveName = "log"
-	LogFileExt  = "log"
-	TimeFormat  = "20060102"
 )
 
 // 获取log文件保存的位置
 func getLogFilePath() string {
-	return LogSavePath
+	return setting.AppSetting.LogSavePath
+}
+
+func getLogFileName() string {
+	return fmt.Sprintf("%s%s.%s", setting.AppSetting.LogSaveName,
+		time.Now().Format(setting.AppSetting.TimeFormat), setting.AppSetting.LogFileExt)
 }
 
 // 获取日志文件完整路径
 func getLogFileFullPath() string {
 	prefixPath := getLogFilePath()
-	suffixPath := fmt.Sprintf("%s%s.%s", LogSaveName, time.Now().Format(TimeFormat), LogFileExt)
+	suffixPath := getLogFileName()
 
 	return fmt.Sprintf("%s/%s", prefixPath, suffixPath)
 }
 
 // 常打开日志文件
-func openLogFile(filePath string) *os.File {
+func openLogFile(filename, filePath string) (*os.File, error) {
 	// 返回文件信息结构描述文件
-	_, err := os.Stat(filePath)
-	switch {
-	case os.IsNotExist(err):
-		mkDir()
-	case os.IsPermission(err):
-		log.Fatalf("Permission: %v", err)
+
+	dir, err := os.Getwd()
+	if err != nil {
+		return nil, fmt.Errorf("os.Getwd err : %v", err)
 	}
 
-	handle, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalf("Fail to OpenFile : %v", err)
+	src := path.Join(dir, filePath)
+	perm := file.CheckPermission(src)
+	if perm {
+		return nil, fmt.Errorf("file.CheckPermission Permission denied src: %s", src)
 	}
-	return handle
-}
+	err = file.IsNotExistMkDir(src)
+	if err != nil {
+		return nil, fmt.Errorf("failed file.IsNotExistMkDir src: %s err %v", src, err)
+	}
 
-// 创建日志文件的文件夹
-func mkDir() {
-	dir, _ := os.Getwd()
-	// os.ModePerm = 0777 即表示拥有所有权限
-	err := os.MkdirAll(dir+"/"+getLogFilePath(), os.ModePerm)
+	fmt.Println("log file full path", path.Join(src, filename))
+
+	handle, err := file.Open(path.Join(src, filename), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to OpenFile Err:%w", err)
 	}
+	return handle, nil
 }

@@ -46,6 +46,21 @@ paths:
       summary: Get Auth Token
       tags:
       - auth
+  /api/upload:
+    get:
+      consumes:
+      - application/json
+      description: 上传图片
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: UploadFile
+      tags:
+      - file
   /api/v1/article:
     put:
       consumes:
@@ -75,6 +90,10 @@ paths:
         in: query
         name: state
         type: integer
+      - description: coverImageUrl
+        in: query
+        name: cover_image_url
+        type: string
       produces:
       - application/json
       responses:
@@ -145,6 +164,10 @@ paths:
         in: query
         name: modified_by
         required: true
+        type: string
+      - description: coverImageUrl
+        in: query
+        name: cover_image_url
         type: string
       - description: State
         in: query
@@ -277,6 +300,30 @@ paths:
           schema:
             type: string
       summary: 修改文章标签
+      tags:
+      - Tag
+  /tags/export:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 导出标签
+      tags:
+      - Tag
+  /tags/import:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 导入标签
       tags:
       - Tag
 securityDefinitions:

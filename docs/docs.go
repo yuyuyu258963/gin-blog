@@ -69,6 +69,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/upload": {
+            "get": {
+                "description": "上传图片",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "file"
+                ],
+                "summary": "UploadFile",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/article": {
             "put": {
                 "description": "新增文章",
@@ -114,6 +137,12 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "State",
                         "name": "state",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "coverImageUrl",
+                        "name": "cover_image_url",
                         "in": "query"
                     }
                 ],
@@ -198,6 +227,12 @@ const docTemplate = `{
                         "name": "modified_by",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "coverImageUrl",
+                        "name": "cover_image_url",
+                        "in": "query"
                     },
                     {
                         "type": "integer",
@@ -413,6 +448,44 @@ const docTemplate = `{
                     "Tag"
                 ],
                 "summary": "删除文章标签",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/tags/export": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "导出标签",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/tags/import": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "导入标签",
                 "responses": {
                     "200": {
                         "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
