@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,31 +27,44 @@ func init() {
 	gredis.Setup()
 }
 
+// 添加文件描述符环境变量的常量
+const LISTEN_FDS_START = 3
+const ENV_LISTEN_FDS = "LISTEN_FDS"
+const ENV_LISTEN_PID = "LISTEN_PID"
+
 // endless 热更新采用创建子进程后，将原进程退出的方式
 // @title           Swagger Example API
 // @version         1.0
 // @description     This is a sample server celler server.
 // @termsOfService  http://swagger.io/terms/
-
-// @contact.name   API Support
-// @contact.url    http://www.swagger.io/support
-// @contact.email  support@swagger.io
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host      localhost:8080
-// @BasePath  /api/v1
-
-// @securityDefinitions.basic  BasicAuth
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
-	router := routers.InitRouter()
 	ServerSetting := setting.ServerSetting
+	fd := LISTEN_FDS_START
+	var listener net.Listener
+	var err error
+	log.Info("uintptr(fd)", uintptr(fd))
+
+	log.InfoF("os.Getenv(ENV_LISTEN_PID) %s, fmt.Sprint(os.Getpid()) %s", os.Getenv(ENV_LISTEN_PID), fmt.Sprint(os.Getpid()))
+	// 判断是否为子进程
+	if os.Getenv(ENV_LISTEN_PID) != "" {
+		log.InfoF("starting server reuse listener at new process pid : %d ...", syscall.Getpid())
+
+		file := os.NewFile(uintptr(fd), "")
+		listener, err = net.FileListener(file)
+		if err != nil {
+			log.FatalF("Failed to create listener from file descriptor: %v", err)
+		}
+	} else {
+		log.InfoF("starting server first time with pid : %d ...", os.Getpid())
+		listener, err = net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", ServerSetting.HTTPPort))
+		if err != nil {
+			log.FatalF("Failed to create listener: %v", err)
+		}
+	}
+
+	router := routers.InitRouter()
 	srv := &http.Server{
-		Addr:           fmt.Sprintf("0.0.0.0:%d", ServerSetting.HTTPPort),
+		// Addr:           fmt.Sprintf("0.0.0.0:%d", ServerSetting.HTTPPort),
 		Handler:        router,
 		ReadTimeout:    ServerSetting.ReadTimeout,
 		WriteTimeout:   ServerSetting.WriteTimeout,
@@ -58,8 +72,8 @@ func main() {
 	}
 
 	go func() {
-		log.InfoF("starting server at port: %d ...", ServerSetting.HTTPPort)
-		if err := srv.ListenAndServe(); err != nil {
+		log.InfoF("starting server at port: %d, pid : %d ...", ServerSetting.HTTPPort, syscall.Getpid())
+		if err := srv.Serve(listener); err != nil {
 			log.InfoF("Failed Listen: %v \n", err)
 		}
 	}()
@@ -74,17 +88,18 @@ func main() {
 	case <-quit:
 		log.Info("Shutdown Server ...")
 		shutdown(srv)
+		listener.Close()
+		os.Exit(0)
 	case <-reload:
-		shutdown(srv)
 		log.Info("Triggering graceful restart ...")
 
 		// 启动一个新进程
-		if err := startNewProcess(); err != nil {
+		if err := startNewProcess(listener); err != nil {
 			log.ErrorF("Failed to start new process: %v", err)
 			// 添加重试逻辑
 			for i := 0; i < 3; i++ {
 				time.Sleep(time.Second)
-				if err := startNewProcess(); err == nil {
+				if err := startNewProcess(listener); err == nil {
 					break
 				}
 			}
@@ -93,7 +108,13 @@ func main() {
 }
 
 // startNewProcess 启动新进程
-func startNewProcess() error {
+func startNewProcess(listener net.Listener) error {
+	// 获取 listener 的文件描述符
+	listenerFile, err := listener.(*net.TCPListener).File()
+	if err != nil {
+		return fmt.Errorf("failed to get listener file:%v", listener)
+	}
+	defer listenerFile.Close()
 
 	executable, err := os.Executable()
 	if err != nil {
@@ -102,27 +123,30 @@ func startNewProcess() error {
 
 	// 设置新进程的环境变量和参数
 	env := os.Environ()
+	env = append(env,
+		fmt.Sprintf("%s=%d", ENV_LISTEN_FDS, 1),
+		fmt.Sprintf("%s=%d", ENV_LISTEN_PID, os.Getpid()))
+
 	args := os.Args[1:]
 
 	// 创建新进程
 	process, err := os.StartProcess(executable, args, &os.ProcAttr{
 		Dir:   ".",
 		Env:   env,
-		Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
+		Files: []*os.File{os.Stdin, os.Stdout, os.Stderr, listenerFile}, // 额外传递 listener 的文件描述符
 	})
 
 	if err != nil {
 		return fmt.Errorf("failed to start new process: %v", err)
 	}
 
-	// 释放这个新创建的子进程，让它能独立运行
-	log.InfoF("new server serve pid=%d", syscall.Getpid())
-	err = process.Release()
-	if err != nil {
-		return fmt.Errorf("failed to release new process: %v", err)
+	// 检查新创建线程的装阿嚏
+	if err := process.Signal(syscall.Signal(0)); err != nil {
+		return fmt.Errorf("new process closed err:%v", err)
 	}
 
-	return nil
+	// 释放这个新创建的子进程，让它能独立运行
+	return process.Release()
 }
 
 // shutdown 处理服务关闭
