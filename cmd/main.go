@@ -49,7 +49,7 @@ func init() {
 func main() {
 	router := routers.InitRouter()
 	ServerSetting := setting.ServerSetting
-	s := &http.Server{
+	srv := &http.Server{
 		Addr:           fmt.Sprintf("0.0.0.0:%d", ServerSetting.HTTPPort),
 		Handler:        router,
 		ReadTimeout:    ServerSetting.ReadTimeout,
@@ -59,7 +59,7 @@ func main() {
 
 	go func() {
 		log.InfoF("starting server at port: %d ...", ServerSetting.HTTPPort)
-		if err := s.ListenAndServe(); err != nil {
+		if err := srv.ListenAndServe(); err != nil {
 			log.InfoF("Failed Listen: %v \n", err)
 		}
 	}()
@@ -73,18 +73,28 @@ func main() {
 	select {
 	case <-quit:
 		log.Info("Shutdown Server ...")
-		shutdown(s)
+		shutdown(srv)
 	case <-reload:
+		shutdown(srv)
 		log.Info("Triggering graceful restart ...")
+
 		// 启动一个新进程
 		if err := startNewProcess(); err != nil {
 			log.ErrorF("Failed to start new process: %v", err)
+			// 添加重试逻辑
+			for i := 0; i < 3; i++ {
+				time.Sleep(time.Second)
+				if err := startNewProcess(); err == nil {
+					break
+				}
+			}
 		}
 	}
 }
 
 // startNewProcess 启动新进程
 func startNewProcess() error {
+
 	executable, err := os.Executable()
 	if err != nil {
 		return fmt.Errorf("failed to get executable path")
@@ -106,7 +116,7 @@ func startNewProcess() error {
 	}
 
 	// 释放这个新创建的子进程，让它能独立运行
-	log.InfoF("new server serve pid=%d", syscall.Getegid())
+	log.InfoF("new server serve pid=%d", syscall.Getpid())
 	err = process.Release()
 	if err != nil {
 		return fmt.Errorf("failed to release new process: %v", err)
@@ -124,6 +134,6 @@ func shutdown(srv *http.Server) {
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Fatal("Server ShutDown:", err)
 	}
-
+	<-ctx.Done()
 	log.Info("Server exiting")
 }
