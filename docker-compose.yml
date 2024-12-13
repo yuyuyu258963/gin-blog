@@ -1,0 +1,61 @@
+version: '3.7'
+
+networks:
+    mall:
+        driver: bridge
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=mall_db
+      - MYSQL_USER=mall
+      - MYSQL_PASSWORD=123456
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./config/sql:/docker-entrypoint-initdb.d/
+    ports:
+      - "3306:3306"
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    environment:
+      - REDIS_PASSWORD=123456
+      - ALLOW_EMPTY_PASSWORD=no
+    volumes:
+      - /usr/local/redis:/usr/local/redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # AMQP 端口
+      - "15672:15672"  # 管理界面端口
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest  # 设置 RabbitMQ 默认用户名
+      - RABBITMQ_DEFAULT_PASS=guest  # 设置 RabbitMQ 默认密码
+    networks:
+      - mall
+
+  kibana:
+    image: kibana:8.4.2
+    container_name: kibana
+    environment:
+      - I18N_LOCALE=zh-CN
+      - XPACK_GRAPH_ENABLED=true
+      - TIMELION_ENABLED=true
+      - XPACK_MONITORING_COLLECTION_ENABLED="true"
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    networks:
+      - mall

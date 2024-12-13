@@ -43,6 +43,7 @@ runDocker: buildProject buildDockerImage
 clean:
 	@docker rm -f gin-example-app
 	@docker rmi gin-blog-docker
+	@rm ./main
 
 help:
 	@echo "make run: run server on local"
