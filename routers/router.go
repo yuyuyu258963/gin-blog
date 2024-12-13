@@ -3,6 +3,7 @@ package routers
 import (
 	"gin_example/middleware"
 	"gin_example/pkg/export"
+	"gin_example/pkg/qrcode"
 	"gin_example/pkg/setting"
 	"gin_example/pkg/upload"
 	api "gin_example/routers/api"
@@ -30,6 +31,8 @@ func InitRouter() *gin.Engine {
 		http.Dir(upload.GetImageFullPath()))
 	r.StaticFS("/"+setting.AppSetting.ExportSavePath,
 		http.Dir(export.GetExcelFullPath()))
+	r.StaticFS("/"+setting.AppSetting.QrCodeSavePath,
+		http.Dir(qrcode.GetQrCodeFullPath()))
 
 	// url := ginSwagger.URL("/swagger/doc.json") // 指定 swagger json 的路径
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -76,4 +79,6 @@ func articleApi(r *gin.RouterGroup) {
 	r.PUT("/article/:id", v1.EditArticle)
 	// 删除文章
 	r.DELETE("/article/:id", v1.DeleteArticle)
+	// 生成二维码
+	r.POST("/article/poster/generate", v1.GenerateArticlePoster)
 }

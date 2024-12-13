@@ -32,7 +32,9 @@ type AppConfig struct {
 	ImageMaxSize   int // MB 为单位
 	ImageAllowExts []string
 
-	ExportSavePath string
+	ExportSavePath string // 文件导出存储的路径
+	QrCodeSavePath string // 二维码的保存路径
+	FontSavePath   string // 二维码的保存路径
 
 	LogSavePath string // log日志保存的位置
 	LogSaveName string

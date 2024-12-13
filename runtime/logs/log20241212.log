@@ -309,3 +309,24 @@
 [INFO][main.go:75]2024/12/12 22:04:46 Shutdown Server ...
 [INFO][main.go:63]2024/12/12 22:04:46 Failed Listen: http: Server closed 
 [INFO][main.go:128]2024/12/12 22:04:46 Server exiting
+[INFO][redis.go:41]2024/12/12 23:22:08 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 23:22:08 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 23:22:45 {"ClientIP":"::1","latencyTime":13571083,"reqMethod":"GET","reqUri":"/api/auth?username=test\u0026password=test123456","statusCode":200}
+[INFO][log.go:28]2024/12/12 23:23:13 {"ClientIP":"::1","latencyTime":501,"reqMethod":"GET","reqUri":"/api/article/poster/generate","statusCode":404}
+[INFO][log.go:28]2024/12/12 23:23:16 {"ClientIP":"::1","latencyTime":1100,"reqMethod":"POST","reqUri":"/api/article/poster/generate","statusCode":404}
+[INFO][log.go:28]2024/12/12 23:23:29 {"ClientIP":"::1","latencyTime":7828594,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][main.go:75]2024/12/12 23:24:15 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 23:24:15 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 23:24:15 Server exiting
+[INFO][redis.go:41]2024/12/12 23:24:18 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 23:24:18 starting server at port: 8000 ...
+[INFO][main.go:75]2024/12/12 23:24:44 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 23:24:44 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 23:24:44 Server exiting
+[INFO][redis.go:41]2024/12/12 23:24:46 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/12 23:24:46 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/12 23:25:29 {"ClientIP":"::1","latencyTime":78212,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/12 23:25:31 {"ClientIP":"::1","latencyTime":3772076,"reqMethod":"GET","reqUri":"/qrcode/ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][main.go:75]2024/12/12 23:26:45 Shutdown Server ...
+[INFO][main.go:63]2024/12/12 23:26:45 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/12 23:26:45 Server exiting

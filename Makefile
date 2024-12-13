@@ -22,13 +22,13 @@ buildDockerImage:
 
 run: swagInit
 	@echo "===== Static linked executable file ====="
-	@CGO_ENABLED=0 GOOS=linux go build -v -o main ./cmd/main.go
+	@CGO_ENABLED=1 GOOS=linux go build -v -o main ./cmd/main.go
 	@./main
 
 buildProject: swagInit
 # 直接将生成的可执行文件静态链接到所依赖的库
 	@echo "===== Static linked executable file ====="
-	@CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/main.go
+	@CGO_ENABLED=0 GOOS=linux go build -p 2 -a -installsuffix cgo -o main ./cmd/main.go
 
 runDocker: buildProject buildDockerImage
 	@echo "===== start run in docker container gin-example-app ====="

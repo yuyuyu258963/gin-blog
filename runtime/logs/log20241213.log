@@ -1,0 +1,142 @@
+[INFO][redis.go:41]2024/12/13 11:10:41 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:10:41 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:11:44 {"ClientIP":"::1","latencyTime":8491531,"reqMethod":"GET","reqUri":"/api/auth?username=test\u0026password=test123456","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:12:00 {"ClientIP":"::1","latencyTime":9609424,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][main.go:75]2024/12/13 11:13:03 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:13:03 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:13:03 Server exiting
+[INFO][redis.go:41]2024/12/13 11:13:12 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:13:12 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:13:16 {"ClientIP":"::1","latencyTime":24490869,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:13:36 {"ClientIP":"::1","latencyTime":722,"reqMethod":"GET","reqUri":"//qrcode","statusCode":404}
+[INFO][log.go:28]2024/12/13 11:13:36 {"ClientIP":"::1","latencyTime":723,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][log.go:28]2024/12/13 11:13:39 {"ClientIP":"::1","latencyTime":120658,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:13:43 {"ClientIP":"::1","latencyTime":4016832,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:15:33 {"ClientIP":"::1","latencyTime":239893,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][log.go:28]2024/12/13 11:20:22 {"ClientIP":"::1","latencyTime":1963456,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:20:22 {"ClientIP":"::1","latencyTime":726,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][main.go:75]2024/12/13 11:25:44 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:25:44 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:25:44 Server exiting
+[INFO][redis.go:41]2024/12/13 11:35:47 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:35:47 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:35:50 {"ClientIP":"::1","latencyTime":30807963,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:35:52 {"ClientIP":"::1","latencyTime":11283875,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:36:18 {"ClientIP":"::1","latencyTime":29238670,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:36:21 {"ClientIP":"::1","latencyTime":285175,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][main.go:75]2024/12/13 11:43:53 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:43:53 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:43:53 Server exiting
+[INFO][redis.go:41]2024/12/13 11:43:55 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:43:55 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:44:07 {"ClientIP":"::1","latencyTime":102766,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:44:10 {"ClientIP":"::1","latencyTime":29125128,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:44:12 {"ClientIP":"::1","latencyTime":123126,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:44:12 {"ClientIP":"::1","latencyTime":3330967,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][main.go:75]2024/12/13 11:44:26 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:44:26 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:44:26 Server exiting
+[INFO][redis.go:41]2024/12/13 11:44:29 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:44:29 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:44:31 {"ClientIP":"::1","latencyTime":16729,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":404}
+[INFO][log.go:28]2024/12/13 11:44:34 {"ClientIP":"::1","latencyTime":41470219,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:44:35 {"ClientIP":"::1","latencyTime":2845888,"reqMethod":"GET","reqUri":"/qrcode/poster-ed3e70c3918bd088a4a11f402164c7ca.jpg","statusCode":200}
+[INFO][main.go:75]2024/12/13 11:49:47 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:49:47 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:49:47 Server exiting
+[INFO][redis.go:41]2024/12/13 11:57:08 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:57:08 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:57:26 {"ClientIP":"::1","latencyTime":237652,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:58:16 {"ClientIP":"127.0.0.1","latencyTime":728,"reqMethod":"GET","reqUri":"/","statusCode":404}
+[INFO][log.go:28]2024/12/13 11:58:16 {"ClientIP":"127.0.0.1","latencyTime":623,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][main.go:75]2024/12/13 11:58:59 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 11:58:59 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 11:58:59 Server exiting
+[INFO][redis.go:41]2024/12/13 11:59:02 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 11:59:02 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 11:59:04 {"ClientIP":"127.0.0.1","latencyTime":732,"reqMethod":"GET","reqUri":"/","statusCode":404}
+[INFO][log.go:28]2024/12/13 11:59:13 {"ClientIP":"127.0.0.1","latencyTime":527208,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 11:59:18 {"ClientIP":"::1","latencyTime":65150,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][log.go:28]2024/12/13 11:59:20 {"ClientIP":"::1","latencyTime":48420,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][main.go:75]2024/12/13 12:00:27 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:00:27 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:00:27 Server exiting
+[INFO][redis.go:41]2024/12/13 12:02:01 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:02:01 starting server at port: 8000 ...
+[INFO][log.go:28]2024/12/13 12:02:03 {"ClientIP":"127.0.0.1","latencyTime":92178,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:02:15 {"ClientIP":"127.0.0.1","latencyTime":63942,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][redis.go:41]2024/12/13 12:02:39 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:02:39 starting server at port: 8001 ...
+[INFO][log.go:28]2024/12/13 12:06:54 {"ClientIP":"127.0.0.1","latencyTime":62602,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][log.go:28]2024/12/13 12:06:59 {"ClientIP":"::1","latencyTime":91809,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:06:59 {"ClientIP":"::1","latencyTime":1456,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][log.go:28]2024/12/13 12:07:03 {"ClientIP":"::1","latencyTime":50437,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][main.go:75]2024/12/13 12:08:32 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:08:32 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:08:32 Server exiting
+[INFO][redis.go:41]2024/12/13 12:08:40 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:08:40 starting server at port: 8000 ...
+[INFO][main.go:75]2024/12/13 12:08:41 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:08:41 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:08:41 Server exiting
+[INFO][redis.go:41]2024/12/13 12:08:46 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:08:46 starting server at port: 8001 ...
+[INFO][log.go:28]2024/12/13 12:08:50 {"ClientIP":"127.0.0.1","latencyTime":48932,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][log.go:28]2024/12/13 12:09:06 {"ClientIP":"::1","latencyTime":43477391,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:09:08 {"ClientIP":"::1","latencyTime":35390330,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:09:09 {"ClientIP":"::1","latencyTime":41425929,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:09:11 {"ClientIP":"::1","latencyTime":27174084,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][main.go:75]2024/12/13 12:10:34 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:10:34 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:10:34 Server exiting
+[INFO][redis.go:41]2024/12/13 12:10:36 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:10:36 starting server at port: 8001 ...
+[INFO][main.go:63]2024/12/13 12:10:36 Failed Listen: listen tcp 0.0.0.0:8001: bind: address already in use 
+[INFO][main.go:75]2024/12/13 12:10:42 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:10:42 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:10:42 Server exiting
+[INFO][redis.go:41]2024/12/13 12:10:44 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:10:44 starting server at port: 8000 ...
+[INFO][main.go:75]2024/12/13 12:15:57 Shutdown Server ...
+[INFO][main.go:128]2024/12/13 12:15:57 Server exiting
+[INFO][main.go:75]2024/12/13 12:16:02 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:16:02 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:16:02 Server exiting
+[INFO][redis.go:41]2024/12/13 12:16:11 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:16:11 starting server at port: 8000 ...
+[INFO][redis.go:41]2024/12/13 12:16:16 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:16:16 starting server at port: 8001 ...
+[INFO][log.go:28]2024/12/13 12:16:19 {"ClientIP":"::1","latencyTime":70745,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":304}
+[INFO][log.go:28]2024/12/13 12:16:19 {"ClientIP":"::1","latencyTime":1561,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][log.go:28]2024/12/13 12:46:32 {"ClientIP":"127.0.0.1","latencyTime":1066758,"reqMethod":"GET","reqUri":"/qrcode/","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:32 {"ClientIP":"127.0.0.1","latencyTime":1249,"reqMethod":"GET","reqUri":"/favicon.ico","statusCode":404}
+[INFO][log.go:28]2024/12/13 12:46:42 {"ClientIP":"127.0.0.1","latencyTime":46995907,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:43 {"ClientIP":"127.0.0.1","latencyTime":33858406,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:44 {"ClientIP":"127.0.0.1","latencyTime":34372235,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:45 {"ClientIP":"127.0.0.1","latencyTime":34030307,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:47 {"ClientIP":"127.0.0.1","latencyTime":30006352,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:46:48 {"ClientIP":"127.0.0.1","latencyTime":30226960,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:43 {"ClientIP":"127.0.0.1","latencyTime":28159022,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:44 {"ClientIP":"127.0.0.1","latencyTime":30843168,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:45 {"ClientIP":"127.0.0.1","latencyTime":40687295,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:46 {"ClientIP":"127.0.0.1","latencyTime":31413189,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:48 {"ClientIP":"127.0.0.1","latencyTime":35726501,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:49 {"ClientIP":"127.0.0.1","latencyTime":29383979,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:50 {"ClientIP":"127.0.0.1","latencyTime":31462843,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][log.go:28]2024/12/13 12:48:51 {"ClientIP":"127.0.0.1","latencyTime":34239725,"reqMethod":"POST","reqUri":"/api/v1/article/poster/generate","statusCode":200}
+[INFO][main.go:75]2024/12/13 12:49:32 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:49:32 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:49:32 Server exiting
+[INFO][main.go:75]2024/12/13 12:49:33 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:49:33 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:49:33 Server exiting
+[INFO][redis.go:41]2024/12/13 12:54:25 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 12:54:25 starting server at port: 8001 ...
+[INFO][main.go:75]2024/12/13 12:56:00 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 12:56:00 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 12:56:00 Server exiting
+[INFO][redis.go:41]2024/12/13 13:19:20 success connect to redis: localhost:6379 2
+[INFO][main.go:61]2024/12/13 13:19:20 starting server at port: 8001 ...
+[INFO][main.go:75]2024/12/13 13:19:22 Shutdown Server ...
+[INFO][main.go:63]2024/12/13 13:19:22 Failed Listen: http: Server closed 
+[INFO][main.go:128]2024/12/13 13:19:22 Server exiting

@@ -257,14 +257,14 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "删除文章",
+                "description": "生成二维码",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Article"
                 ],
-                "summary": "删除文章",
+                "summary": "生成二维码",
                 "responses": {
                     "10003": {
                         "description": "{\"code\":10003,\"data\":{},\"msg\":\"文章不存在\"}",

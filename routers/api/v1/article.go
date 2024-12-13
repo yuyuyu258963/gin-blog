@@ -1,8 +1,11 @@
 package v1
 
 import (
+	"fmt"
 	"gin_example/pkg/app"
 	"gin_example/pkg/e"
+	"gin_example/pkg/logging"
+	"gin_example/pkg/qrcode"
 	"gin_example/pkg/setting"
 	"gin_example/pkg/util"
 	"gin_example/service/articleService"
@@ -11,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego/validation"
+	"github.com/boombuler/barcode/qr"
 	"github.com/gin-gonic/gin"
 	"github.com/unknwon/com"
 )
@@ -320,4 +324,50 @@ func DeleteArticle(c *gin.Context) {
 
 reply:
 	appG.Response(http.StatusOK, code, make(map[string]interface{}))
+}
+
+// 生成二维码
+// @Summary 生成二维码
+// @Description 生成二维码
+// @Tags Article
+// @Produce  json
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Failure 10003 {string} json "{"code":10003,"data":{},"msg":"文章不存在"}"
+// @Router /api/v1/article/{id} [Delete]
+func GenerateArticlePoster(c *gin.Context) {
+	fmt.Printf("recieve request from %+v\n", c)
+	appG := app.Gin{C: c}
+	QECODE_URL := "http://localhost:8000/upload/images/098f6bcd4621d373cade4e832627b4f6.jpg"
+
+	article := &articleService.Article{}
+
+	qrc := qrcode.NewQrCode(QECODE_URL, 300, 300, qr.M, qr.Auto)
+	posterName := articleService.GetPosterFlag() + "-" + qrcode.GetQrCodeFileName(qrc.URL) + qrc.GetExt()
+	articlePoster := articleService.NewArticlePoster(posterName, article, qrc)
+	articlePosterBgService := articleService.NewArticlePosterBg(
+		"bg.jpg",
+		articlePoster,
+		&articleService.Rect{
+			X0: 0,
+			Y0: 0,
+			X1: 550,
+			Y1: 700,
+		},
+		&articleService.Pt{
+			X: 125,
+			Y: 298,
+		},
+	)
+
+	_, filePath, err := articlePosterBgService.Generate()
+	if err != nil {
+		logging.WarnF("Generate poster image err: %v", err)
+		appG.Response(http.StatusOK, e.ERROR, nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"poster_url":      qrcode.GetQrCodeFullUrl(posterName),
+		"poster_save_url": filePath + posterName,
+	})
 }

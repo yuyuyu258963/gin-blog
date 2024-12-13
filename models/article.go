@@ -35,7 +35,6 @@ func GetArticles(pageNum int, pageSize int, maps interface{}) (articles []Articl
 	// 使用Preload就是一个预加载器，它会执行两条SQL语句
 	// 即先查 blog_article; 然后查 blog_tag 然后将查出的结果填充到Article中
 	err = db.Preload("Tag").Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles).Error
-	// err = db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&articles).Error
 
 	return
 }
